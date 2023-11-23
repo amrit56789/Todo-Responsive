@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-
-export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showItems, setShowItems }) => {
+import moment from "moment";
+export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showItems, setShowItems, editIndexField, setEditIndexField }) => {
     const [error, setError] = useState(false)
 
     const handleSubmit = (e) => {
@@ -10,19 +10,47 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
             setError("Please enter a text.");
             return;
         }
-        setShowItems([...showItems, inputVal]);
-        setInputVal({ item: "" });
-        setError(false);
+        if (editIndexField >= 0) {
+            let color = "purpleDot"
+            const updatedItems = [...showItems];
+            updatedItems.splice(editIndexField, 1, { item: inputVal.item, dateTime: inputVal.dateTime, taskColor : color });
+            setShowItems(updatedItems);
+            setInputVal({
+                item: "",
+            });
+            setEditIndexField(-1);
+        } else {
+            setShowItems([...showItems, inputVal]);
+            setInputVal({
+                item: "",
+            });
+            setError(false);
+        }
         setpopupModal(false)
+
     }
 
     const handleChange = (e) => {
         const { name, value } = e.target
+        let color = "";
+        const selectedDate = moment(inputVal.dateTime).format("YYYY-MM-DD")
+        const currentDate = moment(new Date()).format("YYYY-MM-DD")
+        if (moment(selectedDate).isSameOrAfter(currentDate, 'day')) {
+            color = "purpleDot";
+        } else {
+            color = "red";
+        }
         setInputVal((previousData) => {
-            return { ...previousData, [name]: value }
-        })
+            return {
+                ...previousData,
+                [name]: value,
+                isCompleted: false,
+                taskColor: color,
+            };
+        });
         setError(false)
     }
+
 
     return (
         <div className="modal-dialog modal-dialog-start" >
@@ -46,20 +74,30 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
                                     required
                                 ></textarea>
                             </div>
-                        </div>
-                        {error && (
-                            <div className="text-danger">
-                                {error}
+
+                            {error && (
+                                <div className="text-danger">
+                                    {error}
+                                </div>
+                            )}
+                            <div className="col-sm-8 my-2">
+                                <input className="px-2 border rounded"
+                                    type="datetime-local"
+                                    id="dateTime"
+                                    name="dateTime"
+                                    value={inputVal.dateTime}
+                                    onChange={handleChange}
+                                    min={inputVal.dateTime}
+                                    required
+                                />
                             </div>
-                        )}
+                        </div>
                         <div className="d-flex justify-content-between mb-3 mt-2">
                             <button className="font-weight-bold btn btn-light border-0 text-primary" onClick={() => setpopupModal(false)}>Cancel</button>
                             <button className="font-weight-bold btn btn-light border-0 text-primary" onClick={handleSubmit}>Done</button>
                         </div>
                     </form>
-
                 </div>
-
             </div>
         </div>
     )
