@@ -3,17 +3,19 @@ import { useState } from "react";
 import moment from "moment";
 export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showItems, setShowItems, editIndexField, setEditIndexField }) => {
     const [error, setError] = useState(false)
-
+    const [isDoneButtonDisabled, setDoneButtonDisabled] = useState(false);
+    const currentDateAndTime = moment().format("YYYY-MM-DDTHH:mm");
     const handleSubmit = (e) => {
         e.preventDefault()
         if (inputVal.item.trim() === "") {
             setError("Please enter a text.");
+            setDoneButtonDisabled(true);
             return;
         }
         if (editIndexField >= 0) {
             let color = "purpleDot"
             const updatedItems = [...showItems];
-            updatedItems.splice(editIndexField, 1, { item: inputVal.item, dateTime: inputVal.dateTime, taskColor : color });
+            updatedItems.splice(editIndexField, 1, { item: inputVal.item, dateTime: inputVal.dateTime, taskColor: color });
             setShowItems(updatedItems);
             setInputVal({
                 item: "",
@@ -32,6 +34,18 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
 
     const handleChange = (e) => {
         const { name, value } = e.target
+
+        const selectedDateTime = moment(value);
+
+        const currentDateTime = moment();
+
+        if (selectedDateTime.isBefore(currentDateTime)) {
+            setError("Please select a future date and time.");
+            setDoneButtonDisabled(true);
+            return;
+        }
+
+
         let color = "";
         const selectedDate = moment(inputVal.dateTime).format("YYYY-MM-DD")
         const currentDate = moment(new Date()).format("YYYY-MM-DD")
@@ -49,6 +63,7 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
             };
         });
         setError(false)
+        setDoneButtonDisabled(false);
     }
 
 
@@ -87,14 +102,14 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
                                     name="dateTime"
                                     value={inputVal.dateTime}
                                     onChange={handleChange}
-                                    min={inputVal.dateTime}
+                                    min={currentDateAndTime}
                                     required
                                 />
                             </div>
                         </div>
                         <div className="d-flex justify-content-between mb-3 mt-2">
                             <button className="font-weight-bold btn btn-light border-0 text-primary" onClick={() => setpopupModal(false)}>Cancel</button>
-                            <button className="font-weight-bold btn btn-light border-0 text-primary" onClick={handleSubmit}>Done</button>
+                            <button className="font-weight-bold btn btn-light border-0 text-primary" disabled={isDoneButtonDisabled} onClick={handleSubmit}>Done</button>
                         </div>
                     </form>
                 </div>
