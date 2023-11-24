@@ -5,7 +5,7 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
     const [error, setError] = useState(false)
     const [isDoneButtonDisabled, setDoneButtonDisabled] = useState(false);
     const currentDateAndTime = moment().format("YYYY-MM-DDTHH:mm");
-    const handleSubmit = (e) => {
+    const handleSubmitButton = (e) => {
         e.preventDefault()
         if (inputVal.item.trim() === "") {
             setError("Please enter a text.");
@@ -31,7 +31,7 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
 
     }
 
-    const handleChange = (e) => {
+    const handleValueChange = (e) => {
         const { name, value } = e.target
 
         if (moment(value).isBefore(moment())) {
@@ -67,7 +67,7 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
                             className="w-full px-3 py-2 border rounded-md resize-none text-md"
                             rows="8"
                             id="item" name="item" value={inputVal.item}
-                            onChange={handleChange}
+                            onChange={handleValueChange}
                             required
                         ></textarea>
                         {error && (
@@ -83,14 +83,14 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
                             id="dateTime"
                             name="dateTime"
                             value={inputVal.dateTime}
-                            onChange={handleChange}
+                            onChange={handleValueChange}
                             min={currentDateAndTime}
                             required
                         />
                     </div>
                     <div className="flex justify-between mt-2">
                         <button className="font-bold text-gray-500 px-4 py-2 border border-gray-300 rounded hover:bg-gray-200" onClick={() => setpopupModal(false)}>Cancel</button>
-                        <button className={`font-bold text-gray-500 px-4 py-2 border border-gray-300 rounded ${isDoneButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-200'}`} disabled={isDoneButtonDisabled} onClick={handleSubmit}>Done</button>
+                        <button className={`font-bold text-gray-500 px-4 py-2 border border-gray-300 rounded ${isDoneButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-200'}`} disabled={isDoneButtonDisabled} onClick={handleSubmitButton}>Done</button>
                     </div>
                 </form>
             </div>
