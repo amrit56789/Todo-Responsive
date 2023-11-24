@@ -23,7 +23,7 @@ export const TodoList = ({ showItems, setShowItems, popupModal, setpopupModal, i
         if (moment(selectedDate).isSameOrAfter(currentDate, 'day')) {
             color = "purpleDot";
         } else {
-            color = "red";
+            color = "redDot";
         }
         setpopupModal(true)
         setInputVal({ item: element.item, dateTime: element.dateTime, taskColor: color })
@@ -36,8 +36,8 @@ export const TodoList = ({ showItems, setShowItems, popupModal, setpopupModal, i
                     ? "bg-yellow-300"
                     : element.taskColor === "purpleDot"
                         ? "bg-purple-500"
-                        : element.taskColor === "red"
-                            ? "bg-red-500"
+                        : element.taskColor === "redDot"
+                            ? "bg-redDot-500"
                             : "";
 
                 return (
@@ -86,7 +86,7 @@ export const TodoList = ({ showItems, setShowItems, popupModal, setpopupModal, i
                                 className={`w-5 h-5 rounded-full ${moment(element.dateTime).isBefore(
                                     new Date(),
                                     "minute"
-                                ) ? "bg-red-500" : dotColor}`}
+                                ) ? "bg-redDot-500" : dotColor}`}
                             ></span>
                         </div>
                     </div>
