@@ -13,9 +13,8 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
             return;
         }
         if (editIndexField >= 0) {
-            let color = "purpleDot"
             const updatedItems = [...showItems];
-            updatedItems.splice(editIndexField, 1, { item: inputVal.item, dateTime: inputVal.dateTime, taskColor: color });
+            updatedItems.splice(editIndexField, 1, { item: inputVal.item, dateTime: inputVal.dateTime, taskColor: "purpleDot" });
             setShowItems(updatedItems);
             setInputVal({
                 item: "",
