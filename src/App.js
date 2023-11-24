@@ -1,8 +1,7 @@
 import { Todo } from "./Component/Todo/Todo";
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 function App() {
   return (
-    <div className="">
+    <div className="w-4/12 m-auto">
       <Todo />
     </div>
   );

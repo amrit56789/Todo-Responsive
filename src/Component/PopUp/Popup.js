@@ -35,31 +35,22 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
     const handleChange = (e) => {
         const { name, value } = e.target
 
-        const selectedDateTime = moment(value);
-
-        const currentDateTime = moment();
-
-        if (selectedDateTime.isBefore(currentDateTime)) {
+        if (moment(value).isBefore(moment())) {
             setError("Please select a future date and time.");
             setDoneButtonDisabled(true);
             return;
         }
 
-
-        let color = "";
         const selectedDate = moment(inputVal.dateTime).format("YYYY-MM-DD")
         const currentDate = moment(new Date()).format("YYYY-MM-DD")
-        if (moment(selectedDate).isSameOrAfter(currentDate, 'day')) {
-            color = "purpleDot";
-        } else {
-            color = "red";
-        }
+        const taskColor = moment(selectedDate).isSameOrAfter(currentDate, 'day') ? "purpleDot" : "red";
+
         setInputVal((previousData) => {
             return {
                 ...previousData,
                 [name]: value,
                 isCompleted: false,
-                taskColor: color,
+                taskColor,
             };
         });
         setError(false)
@@ -68,52 +59,43 @@ export const Popup = ({ popupModal, setpopupModal, inputVal, setInputVal, showIt
 
 
     return (
-        <div className="modal-dialog modal-dialog-start" >
-            <div className="modal-content">
-                <div className="d-flex flex-column align-items-start mx-3 mt-2">
-                    <h4 className="text-dark font-weight-bold" id="exampleModalLabel">
-                        Add Todo
-                    </h4>
-                    <form className="w-100 mt-3">
-                        <div
-                            className="form-group row"
-                            style={{ marginBottom: "0.5rem" }}
-                        >
-                            <div className="col-2xl-8">
-                                <textarea
-                                    className="form-control form-control-lg form-control-solid"
-                                    rows="8"
-                                    style={{ resize: "none", fontSize: "1.2rem" }}
-                                    id="item" name="item" value={inputVal.item}
-                                    onChange={handleChange}
-                                    required
-                                ></textarea>
+        <div className="fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-75 flex items-center justify-center">
+            <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
+                <h4 className="text-2xl font-bold text-gray-800 mb-3">Add Todo</h4>
+                <form className="w-full">
+                    <div className="mb-3">
+                        <textarea
+                            className="w-full px-3 py-2 border rounded-md resize-none text-md"
+                            rows="8"
+                            id="item" name="item" value={inputVal.item}
+                            onChange={handleChange}
+                            required
+                        ></textarea>
+                        {error && (
+                            <div className="text-red-500 mt-1">
+                                {error}
                             </div>
-
-                            {error && (
-                                <div className="text-danger">
-                                    {error}
-                                </div>
-                            )}
-                            <div className="col-sm-8 my-2">
-                                <input className="px-2 border rounded"
-                                    type="datetime-local"
-                                    id="dateTime"
-                                    name="dateTime"
-                                    value={inputVal.dateTime}
-                                    onChange={handleChange}
-                                    min={currentDateAndTime}
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div className="d-flex justify-content-between mb-3 mt-2">
-                            <button className="font-weight-bold btn btn-light border-0 text-primary" onClick={() => setpopupModal(false)}>Cancel</button>
-                            <button className="font-weight-bold btn btn-light border-0 text-primary" disabled={isDoneButtonDisabled} onClick={handleSubmit}>Done</button>
-                        </div>
-                    </form>
-                </div>
+                        )}
+                    </div>
+                    <div className="mb-3">
+                        <input
+                            className="w-full px-3 py-2 border rounded-md"
+                            type="datetime-local"
+                            id="dateTime"
+                            name="dateTime"
+                            value={inputVal.dateTime}
+                            onChange={handleChange}
+                            min={currentDateAndTime}
+                            required
+                        />
+                    </div>
+                    <div className="flex justify-between mt-2">
+                        <button className="font-bold text-gray-500 px-4 py-2 border border-gray-300 rounded hover:bg-gray-200" onClick={() => setpopupModal(false)}>Cancel</button>
+                        <button className={`font-bold text-gray-500 px-4 py-2 border border-gray-300 rounded ${isDoneButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-gray-200'}`} disabled={isDoneButtonDisabled} onClick={handleSubmit}>Done</button>
+                    </div>
+                </form>
             </div>
         </div>
+
     )
 }

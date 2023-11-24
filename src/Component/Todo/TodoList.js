@@ -30,35 +30,69 @@ export const TodoList = ({ showItems, setShowItems, popupModal, setpopupModal, i
         setEditIndexField(index)
     }
     return (
-        <div className="showItems">
+        <div className="text-start">
             {showItems.map((element, index) => {
-                const dotColor = element.isComplete ? "#ffcc66" :
-                    element.taskColor === "purpleDot" ? "#ff66ff" :
-                        element.taskColor === "red" ? "#ff0000" : "";
+                const dotColor = element.isComplete
+                    ? "bg-yellow-300"
+                    : element.taskColor === "purpleDot"
+                        ? "bg-purple-500"
+                        : element.taskColor === "red"
+                            ? "bg-red-500"
+                            : "";
+
                 return (
-                    <div key={index} className="container-md py-2 mt-4 d-flex flex-row justify-content-between align-items-center text-center border-bottom text-dark">
-                        <div className="d-flex align-items-center">
+                    <div
+                        key={index}
+                        className="container-md py-2 mt-4 flex flex-row justify-between items-center text-center border-b border-gray-400 text-gray-800"
+                    >
+                        <div className="flex items-center">
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="flexCheckDefault" checked={element.isComplete} onChange={() => handleCheckBox(index)} style={{ borderRadius: "20px", fontSize: "1.5rem" }} />
+                                <input
+                                    className="w-5 h-5"
+                                    type="checkbox"
+                                    id="flexCheckDefault"
+                                    checked={element.isComplete}
+                                    onChange={() => handleCheckBox(index)}
+                                />
                             </div>
-                            <div className="item px-2 m-0" style={{ fontFamily: "Poppins", fontWeight: "600", fontSize: "1.2rem", textAlign: "justify" }}>
-                                <p className="m-0">{element.item}</p>
-                                <div className="d-flex align-items-center">
-                                    <FontAwesomeIcon icon={faClock} className="text-dark" style={{ marginRight: "4px" }} size="xs" />
-                                    <h6 className="m-0" style={{ fontSize: "0.7rem", color: "#F363CA" }}>{moment(element.dateTime).format("YYYY-MM-DD HH:mm")}</h6>
+                            <div className="item font-semibold text-lg ml-4 text-center">
+                                <p className="text-start">{element.item}</p>
+                                <div className="flex items-center">
+                                    <FontAwesomeIcon
+                                        icon={faClock}
+                                        className="text-gray-800 mr-2"
+                                        size="xs"
+                                    />
+                                    <h6 className="m-0 text-xs text-pink-500">
+                                        {moment(element.dateTime).format("YYYY-MM-DD HH:mm")}
+                                    </h6>
                                 </div>
-
                             </div>
-
                         </div>
-                        <div className="d-flex align-items-center">
-                            <FontAwesomeIcon icon={faTrash} className="text-dark" style={{ marginRight: "12px" }} size="lg" onClick={() => deleteItem(index)} />
-                            <FontAwesomeIcon icon={faPenToSquare} className="text-dark" style={{ marginRight: "12px" }} size="lg" onClick={() => handleeditIndexFieldChange(element, index)} />
-                            <span className="" style={{ width: "20px", height: "20px", backgroundColor: moment(element.dateTime).isBefore(new Date(), 'minute') ? "#ff0000" : dotColor, borderRadius: "10px" }}></span>
+                        <div className="flex items-center">
+                            <FontAwesomeIcon
+                                icon={faTrash}
+                                className="text-gray-800 mr-4 cursor-pointer"
+                                size="lg"
+                                onClick={() => deleteItem(index)}
+                            />
+                            <FontAwesomeIcon
+                                icon={faPenToSquare}
+                                className="text-gray-800 mr-4 cursor-pointer"
+                                size="lg"
+                                onClick={() => handleeditIndexFieldChange(element, index)}
+                            />
+                            <span
+                                className={`w-5 h-5 rounded-full ${moment(element.dateTime).isBefore(
+                                    new Date(),
+                                    "minute"
+                                ) ? "bg-red-500" : dotColor}`}
+                            ></span>
                         </div>
                     </div>
                 );
             })}
         </div>
+
     )
 }
